@@ -24,7 +24,7 @@ export class UsersController {
         throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
       }
 
-      throw e;
+      throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     });
   }
 
@@ -40,7 +40,7 @@ export class UsersController {
         throw new HttpException(e.message, HttpStatus.NOT_FOUND);
       }
 
-      throw e;
+      throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     });
   }
 }
