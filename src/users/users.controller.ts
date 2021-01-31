@@ -43,4 +43,17 @@ export class UsersController {
       throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     });
   }
+
+  @Put(':username')
+  updateUser(@Param('username') username: string, @Body() params: User) {
+    console.log({ username, params });
+
+    return this.usersService.updateUser(username, params).catch((e: Error) => {
+      if (e.message === 'User not found') {
+        throw new HttpException(e.message, HttpStatus.NOT_FOUND);
+      }
+
+      throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    });
+  }
 }

@@ -26,4 +26,16 @@ export class UsersService {
 
     return user;
   }
+
+  async updateUser(username: string, params: User) {
+    const user = await this.getUser(username);
+
+    if (this.users[params.username]) {
+      throw new Error('Username already taken');
+    }
+
+    Object.assign(user, params);
+    delete this.users[username];
+    Object.assign(this.users, { [user.username]: user });
+  }
 }
