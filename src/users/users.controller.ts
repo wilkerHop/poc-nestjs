@@ -1,36 +1,46 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
-
-interface User {
-  username: string;
-  password: string;
-}
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
+import { User } from './User.model';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-  private users: Record<string, User> = {};
+  constructor(private usersService: UsersService) {}
 
-  @HttpCode(201)
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(@Body() user: User) {
-    console.log(user);
+    this.usersService.createUser(user).catch((e: Error) => {
+      if (e.message === 'Username already taken') {
+        throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+      }
 
-    if (this.users[user.username]) {
-      throw new Error('Username already taken');
-    }
-
-    this.users[user.username] = user;
+      throw e;
+    });
   }
 
   @Get()
   list() {
-    console.log(this.users);
-    return Object.values(this.users);
+    return this.usersService.list();
   }
 
   @Get(':username')
   getUser(@Param('username') username: string) {
-    console.log(username);
+    return this.usersService.getUser(username).catch((e: Error) => {
+      if (e.message === 'User not found') {
+        throw new HttpException(e.message, HttpStatus.NOT_FOUND);
+      }
 
-    return this.users[username];
+      throw e;
+    });
   }
 }
