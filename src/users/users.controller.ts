@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpException,
@@ -49,6 +50,18 @@ export class UsersController {
     console.log({ username, params });
 
     return this.usersService.updateUser(username, params).catch((e: Error) => {
+      if (e.message === 'User not found') {
+        throw new HttpException(e.message, HttpStatus.NOT_FOUND);
+      }
+
+      throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    });
+  }
+
+  @Delete(':username')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  deleteUser(@Param('username') username: string) {
+    return this.usersService.deleteUser(username).catch((e: Error) => {
       if (e.message === 'User not found') {
         throw new HttpException(e.message, HttpStatus.NOT_FOUND);
       }

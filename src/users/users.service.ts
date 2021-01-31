@@ -38,4 +38,10 @@ export class UsersService {
     delete this.users[username];
     Object.assign(this.users, { [user.username]: user });
   }
+
+  async deleteUser(username: string) {
+    await this.getUser(username);
+
+    delete this.users[username];
+  }
 }
