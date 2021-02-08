@@ -31,12 +31,12 @@ export class UsersController {
 
   @Get()
   list() {
-    return this.usersService.list();
+    return this.usersService.users({});
   }
 
   @Get(':username')
   getUser(@Param('username') username: string) {
-    return this.usersService.getUser(username).catch((e: Error) => {
+    return this.usersService.user({ username }).catch((e: Error) => {
       if (e.message === 'User not found') {
         throw new HttpException(e.message, HttpStatus.NOT_FOUND);
       }
@@ -46,23 +46,22 @@ export class UsersController {
   }
 
   @Put(':username')
-  updateUser(
-    @Param('username') username: string,
-    @Body() params: UpdateUserDto,
-  ) {
-    return this.usersService.updateUser(username, params).catch((e: Error) => {
-      if (e.message === 'User not found') {
-        throw new HttpException(e.message, HttpStatus.NOT_FOUND);
-      }
+  updateUser(@Param('username') username: string, @Body() data: UpdateUserDto) {
+    return this.usersService
+      .updateUser({ where: { username }, data })
+      .catch((e: Error) => {
+        if (e.message === 'User not found') {
+          throw new HttpException(e.message, HttpStatus.NOT_FOUND);
+        }
 
-      throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
-    });
+        throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      });
   }
 
   @Delete(':username')
   @HttpCode(HttpStatus.NO_CONTENT)
   deleteUser(@Param('username') username: string) {
-    return this.usersService.deleteUser(username).catch((e: Error) => {
+    return this.usersService.deleteUser({ username }).catch((e: Error) => {
       if (e.message === 'User not found') {
         throw new HttpException(e.message, HttpStatus.NOT_FOUND);
       }
