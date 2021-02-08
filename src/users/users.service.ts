@@ -6,9 +6,7 @@ import { User, Prisma } from '@prisma/client';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async user(
-    userWhereUniqueInput: Prisma.UserWhereUniqueInput,
-  ): Promise<User | null> {
+  async user(userWhereUniqueInput: Prisma.UserWhereUniqueInput): Promise<void> {
     const user = await this.prisma.user.findUnique({
       where: userWhereUniqueInput,
     });
@@ -16,8 +14,6 @@ export class UsersService {
     if (!user) {
       throw new Error('User not found');
     }
-
-    return user;
   }
 
   async users(params: {
@@ -37,8 +33,8 @@ export class UsersService {
     });
   }
 
-  async createUser(data: Prisma.UserCreateInput): Promise<User> {
-    return this.prisma.user.create({
+  async createUser(data: Prisma.UserCreateInput): Promise<void> {
+    await this.prisma.user.create({
       data,
     });
   }
@@ -54,8 +50,8 @@ export class UsersService {
     });
   }
 
-  async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
-    return this.prisma.user.delete({
+  async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<void> {
+    await this.prisma.user.delete({
       where,
     });
   }
