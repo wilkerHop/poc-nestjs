@@ -13,11 +13,11 @@ import {
   Put,
 } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto';
-import { UsersService } from './users.service';
+import { UserService } from './user.service';
 
 @Controller('users')
-export class UsersController {
-  constructor(private usersService: UsersService) {}
+export class UserController {
+  constructor(private usersService: UserService) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
