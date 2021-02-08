@@ -10,7 +10,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { User } from './User.model';
+import { CreateUserDto, UpdateUserDto } from './dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -19,7 +19,7 @@ export class UsersController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() user: User) {
+  create(@Body() user: CreateUserDto) {
     return this.usersService.createUser(user).catch((e: Error) => {
       if (e.message === 'Username already taken') {
         throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
@@ -46,7 +46,10 @@ export class UsersController {
   }
 
   @Put(':username')
-  updateUser(@Param('username') username: string, @Body() params: User) {
+  updateUser(
+    @Param('username') username: string,
+    @Body() params: UpdateUserDto,
+  ) {
     return this.usersService.updateUser(username, params).catch((e: Error) => {
       if (e.message === 'User not found') {
         throw new HttpException(e.message, HttpStatus.NOT_FOUND);
