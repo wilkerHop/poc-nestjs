@@ -20,7 +20,7 @@ export class UsersController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() user: User) {
-    this.usersService.createUser(user).catch((e: Error) => {
+    return this.usersService.createUser(user).catch((e: Error) => {
       if (e.message === 'Username already taken') {
         throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
       }
