@@ -68,8 +68,8 @@ export class UserController {
   @HttpCode(HttpStatus.NO_CONTENT)
   deleteUser(@Param('username') username: string) {
     return this.usersService.deleteUser({ username }).catch((e: Error) => {
-      if (e.message === 'User not found') {
-        throw new NotFoundException(e.message);
+      if (e.message.includes('RecordNotFound')) {
+        throw new NotFoundException('User not found');
       }
 
       throw new InternalServerErrorException(e.message);
