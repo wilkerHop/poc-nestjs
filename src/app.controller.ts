@@ -6,10 +6,10 @@ import {
   UseGuards,
   HttpCode,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { User } from '@prisma/client';
 import { IncomingMessage } from 'http';
 import { AppService } from './app.service';
+import { LocalAuthGuard } from './auth/local-auth.guard';
 
 @Controller()
 export class AppController {
@@ -20,7 +20,7 @@ export class AppController {
     return this.appService.getHealth();
   }
 
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(200)
   async login(@Request() req: IncomingMessage & { user: User }) {
