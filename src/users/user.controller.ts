@@ -11,7 +11,12 @@ import {
   Param,
   Post,
   Put,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
+import { User } from '@prisma/client';
+import { IncomingMessage } from 'http';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { UserService } from './user.service';
 
@@ -34,6 +39,12 @@ export class UserController {
   @Get()
   list() {
     return this.usersService.users({});
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  getProfile(@Request() req: IncomingMessage & { user: User }) {
+    return req.user;
   }
 
   @Get(':username')
